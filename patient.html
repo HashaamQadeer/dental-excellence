@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient Details - Dental Excellence</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://unpkg.com/@yaireo/tagify/dist/tagify.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Dental Excellence</h1>
+      <nav>
+        <a href="index.html">Back to Patient List</a>
+      </nav>
+    </header>
+    <main>
+      <section id="patient-info">
+        <h2>Patient Information</h2>
+        <form id="patient-form">
+          <label for="name">Name:</label>
+          <input type="text" id="name" required />
+
+          <label for="name">Name:</label>
+          <input type="text" id="name" required />
+
+          <<label for="gender">Gender:</label>
+          <input type="text" id="gender" disabled>
+
+          <label for="dob">Date of Birth:</label>
+          <input type="date" id="dob" required />
+
+          <label for="address">Address:</label>
+          <input type="text" id="address" required />
+
+          <label for="phone">Phone Number:</label>
+          <input type="tel" id="phone" required />
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" />
+
+          <label for="patient-id">Patient ID:</label>
+          <input type="text" id="patient-id" readonly />
+
+          <button type="submit">Save Changes</button>
+          <button type="button" id="delete-patient">Delete Patient</button>
+        </form>
+      </section>
+      <section id="procedures">
+        <h2>Procedures</h2>
+        <input name="procedures-tags" placeholder="Add procedures" />
+        <table id="procedures-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Procedure</th>
+              <th>Cost</th>
+              <th>Paid</th>
+              <th>Balance</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="procedures-body"></tbody>
+        </table>
+        <button id="add-procedure">Add Procedure</button>
+      </section>
+    </main>
+    <script src="src/patient.js"></script>
+  </body>
+</html>

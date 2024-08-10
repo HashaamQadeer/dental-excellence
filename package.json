@@ -1,0 +1,19 @@
+{
+    "name": "dental-excellence",
+    "version": "1.0.0",
+    "description": "Dental clinic management software",
+    "main": "main.js",
+    "scripts": {
+      "start": "electron .",
+      "build": "electron-builder"
+    },
+    "author": "Your Name",
+    "license": "ISC",
+    "devDependencies": {
+      "electron": "^13.1.7",
+      "electron-builder": "^22.11.7"
+    },
+    "dependencies": {
+      "sqlite3": "^5.0.2"
+    }
+  }
