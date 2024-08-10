@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dental Excellence</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <header>
         <h1>Dental Excellence</h1>
@@ -24,30 +26,39 @@
         <section id="home" class="home-section tab-content active">
             <h2>Add New Patient</h2>
             <form id="add-patient-form" class="patient-form">
-              <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name">
-                <label for="gender">Gender:</label>
-                <select id="gender">
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="dob">Date of Birth:</label>
-                <input type="date" id="dob">
-                <label for="address">Address:</label>
-                <input type="text" id="address">
-              </div>
-              <div class="form-group">
-                <label for="phone">Phone Number:</label>
-                <input type="tel" id="phone">
-                <label for="email">Email:</label>
-                <input type="email" id="email">
-              </div>
-              <button type="submit">Add Patient</button>
+                <div class="form-group">
+                    <span>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name">
+                    </span>
+
+                    <span>
+                        <label for="gender">Gender:</label>
+                        <select id="gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="dob">Date of Birth:</label>
+                    <input type="date" id="dob">
+                    <label for="address">Address:</label>
+                    <input type="text" id="address">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="tel" id="phone">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email">
+                </div>
+
+                <button type="submit">Add Patient</button>
             </form>
-          </section>
+        </section>
 
         <section id="patients" class="tab-content">
             <!-- Patient list will be dynamically loaded here -->
@@ -122,6 +133,7 @@
     </main>
 
     <script src="src/patients.js"></script>
-   
+
 </body>
+
 </html>

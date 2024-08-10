@@ -18,25 +18,53 @@ function initDatabase() {
 }
 
 function createTables() {
-  db.run(`CREATE TABLE IF NOT EXISTS patients (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    gender TEXT NOT NULL,
-    dob TEXT NOT NULL,
-    phone TEXT NOT NULL,
-    address TEXT NOT NULL,
-    email TEXT NOT NULL
-  )`);
+  db.serialize(() => {
+    db.run(
+      `CREATE TABLE IF NOT EXISTS patients (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      gender TEXT NOT NULL CHECK(gender IN ('Male', 'Female', 'Other')),
+      dob DATE NOT NULL,
+      phone TEXT NOT NULL UNIQUE,
+      address TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE
+    )`,
+      function (err) {
+        if (err) {
+          console.error("Error creating patients table:", err.message);
+        }
+      }
+    );
 
-  db.run(`CREATE TABLE IF NOT EXISTS procedures (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    patient_id INTEGER,
-    date TEXT NOT NULL,
-    procedure TEXT NOT NULL,
-    cost REAL NOT NULL,
-    paid REAL NOT NULL,
-    FOREIGN KEY (patient_id) REFERENCES patients (id)
-  )`);
+    db.run(
+      `CREATE TABLE IF NOT EXISTS procedures (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      patient_id INTEGER NOT NULL,
+      date DATE NOT NULL,
+      procedure TEXT NOT NULL,
+      cost REAL NOT NULL CHECK(cost >= 0),
+      paid REAL NOT NULL CHECK(paid >= 0),
+      FOREIGN KEY (patient_id) REFERENCES patients (id)
+    )`,
+      (err) => {
+        if (err) {
+          console.error("Error creating procedures table:", err.message);
+        }
+      }
+    );
+
+    db.run(
+      `CREATE INDEX IF NOT EXISTS idx_patient_id ON procedures (patient_id)`,
+      (err) => {
+        if (err) {
+          console.error(
+            "Error creating index on procedures table:",
+            err.message
+          );
+        }
+      }
+    );
+  });
 }
 
 function getAllPatients() {
@@ -51,7 +79,8 @@ function getAllPatients() {
 function addPatient(patientData) {
   return new Promise((resolve, reject) => {
     const { name, gender, dob, address, phone, email } = patientData;
-    if (!name ||!gender || !dob || !address || !phone|| !email){
+
+    if (!name || !gender || !dob || !address || !phone || !email) {
       reject(new Error("All fields are required"));
       return;
     }
@@ -79,7 +108,7 @@ function updatePatient(patientData) {
   return new Promise((resolve, reject) => {
     const { id, name, gender, dob, address, phone, email } = patientData;
     db.run(
-      "UPDATE patients SET name = ?,gender = ?, dob = ?, address = ?,  address = ?, email = ? WHERE id = ?",
+      "UPDATE patients SET name = ?, gender = ?, dob = ?, address = ?, phone = ?, email = ? WHERE id = ?",
       [name, gender, dob, address, phone, email, id],
       (err) => {
         if (err) reject(err);
@@ -147,35 +176,48 @@ function updateProcedure(procedureData) {
     );
   });
 }
+
 function deleteProcedure(procedureId) {
   return new Promise((resolve, reject) => {
-    db.run("DELETE FROM procedures WHERE id = ?", [procedureId], function (err) {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(this.changes);
+    db.run(
+      "DELETE FROM procedures WHERE id = ?",
+      [procedureId],
+      function (err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(this.changes);
+        }
       }
-    });
+    );
   });
 }
 
 function getProcedures(patientId) {
   return new Promise((resolve, reject) => {
-    db.all("SELECT * FROM procedures WHERE patient_id = ? ORDER BY date DESC", [patientId], (err, rows) => {
-      if (err) reject(err);
-      else resolve(rows);
-    });
-  });
-}
-function getProcedureById(procedureId) {
-  return new Promise((resolve, reject) => {
-    db.get("SELECT * FROM procedures WHERE id = ?", [procedureId], (err, row) => {
-      if (err) reject(err);
-      else resolve(row);
-    });
+    db.all(
+      "SELECT * FROM procedures WHERE patient_id = ? ORDER BY date DESC",
+      [patientId],
+      (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      }
+    );
   });
 }
 
+function getProcedureById(procedureId) {
+  return new Promise((resolve, reject) => {
+    db.get(
+      "SELECT * FROM procedures WHERE id = ?",
+      [procedureId],
+      (err, row) => {
+        if (err) reject(err);
+        else resolve(row);
+      }
+    );
+  });
+}
 
 module.exports = {
   initDatabase,
