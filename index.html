@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dental Excellence</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Dental Excellence</h1>
+    </header>
+
+    <nav>
+        <button class="tab-button active" data-tab="home">Home</button>
+        <button class="tab-button" data-tab="patients">Patients</button>
+        <button class="tab-button" data-tab="appointments">Appointments</button>
+        <button class="tab-button" data-tab="inventory">Inventory</button>
+        <button class="tab-button" data-tab="reports">Reports</button>
+        <button class="tab-button" data-tab="pending-payments">Pending Payments</button>
+    </nav>
+
+    <main>
+        <section id="home" class="home-section tab-content active">
+            <h2>Add New Patient</h2>
+            <form id="add-patient-form" class="patient-form">
+              <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name">
+                <label for="gender">Gender:</label>
+                <select id="gender">
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob">
+                <label for="address">Address:</label>
+                <input type="text" id="address">
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone">
+                <label for="email">Email:</label>
+                <input type="email" id="email">
+              </div>
+              <button type="submit">Add Patient</button>
+            </form>
+          </section>
+
+        <section id="patients" class="tab-content">
+            <!-- Patient list will be dynamically loaded here -->
+        </section>
+
+        <section id="appointments" class="tab-content">
+            <h2>Appointments</h2>
+            <button id="add-appointment">Add New Appointment</button>
+            <table id="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Patient</th>
+                        <th>Procedure</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="appointments-body">
+                    <!-- Appointment rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </section>
+
+        <section id="inventory" class="tab-content">
+            <h2>Inventory</h2>
+            <button id="add-item">Add New Item</button>
+            <table id="inventory-table">
+                <thead>
+                    <tr>
+                        <th>Item ID</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-body">
+                    <!-- Inventory rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </section>
+
+        <section id="reports" class="tab-content">
+            <h2>Reports</h2>
+            <div id="report-options">
+                <button id="generate-financial-report">Financial Report</button>
+                <button id="generate-patient-report">Patient Report</button>
+                <button id="generate-inventory-report">Inventory Report</button>
+            </div>
+            <div id="report-display">
+                <!-- Generated reports will be displayed here -->
+            </div>
+        </section>
+
+        <section id="pending-payments" class="tab-content">
+            <h2>Pending Payments</h2>
+            <table id="pending-payments-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Balance</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="pending-payments-body">
+                    <!-- Pending payment rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="src/patients.js"></script>
+   
+</body>
+</html>
