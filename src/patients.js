@@ -12,15 +12,9 @@ async function loadPatients() {
         <td>${patient.contact}</td>
         <td>${patient.email}</td>
         <td>
-          <input type="checkbox" ${
-            patient.diabetes ? "checked" : ""
-          } disabled> Diabetes
-          <input type="checkbox" ${
-            patient.hypertension ? "checked" : ""
-          } disabled> Hypertension
-          <input type="checkbox" ${
-            patient.heartDisease ? "checked" : ""
-          } disabled> Heart Disease
+          <input type="checkbox" ${patient.diabetes ? "checked" : ""} disabled> Diabetes
+          <input type="checkbox" ${patient.hypertension ? "checked" : ""} disabled> Hypertension
+          <input type="checkbox" ${patient.heartDisease ? "checked" : ""} disabled> Heart Disease
         </td>
       `;
       tableBody.appendChild(row);
@@ -74,41 +68,41 @@ async function loadPatients() {
 //   }
 // }
 
-function addPatient(event) {
-  event.preventDefault();
+// function addPatient(event) {
+//   event.preventDefault();
 
-  const name = document.getElementById("patient-name").value;
-  const age = document.getElementById("patient-age").value;
-  const contact = document.getElementById("patient-contact").value;
+//   const name = document.getElementById("patient-name").value;
+//   const age = document.getElementById("patient-age").value;
+//   const contact = document.getElementById("patient-contact").value;
 
-  if (!name || !age || !contact) {
-    alert("Please fill in all fields");
-    return;
-  }
+//   if (!name || !age || !contact) {
+//     alert("Please fill in all fields");
+//     return;
+//   }
 
-  const newPatient = {
-    id: Date.now(), // Using timestamp as a simple unique ID
-    name: name,
-    age: parseInt(age),
-    contact: contact,
-  };
+//   const newPatient = {
+//     id: Date.now(), // Using timestamp as a simple unique ID
+//     name: name,
+//     age: parseInt(age),
+//     contact: contact,
+//   };
 
-  // Assuming we have a patients array to store patient data
-  patients.push(newPatient);
+//   // Assuming we have a patients array to store patient data
+//   patients.push(newPatient);
 
-  // Clear the form
-  document.getElementById("patient-name").value = "";
-  document.getElementById("patient-age").value = "";
-  document.getElementById("patient-contact").value = "";
+//   // Clear the form
+//   document.getElementById("patient-name").value = "";
+//   document.getElementById("patient-age").value = "";
+//   document.getElementById("patient-contact").value = "";
 
-  // Refresh the patients list
-  loadPatients();
+//   // Refresh the patients list
+//   loadPatients();
 
-  // Hide the form after adding
-  document.getElementById("add-patient-form").style.display = "none";
+//   // Hide the form after adding
+//   document.getElementById("add-patient-form").style.display = "none";
 
-  alert("New patient added successfully!");
-}
+//   alert("New patient added successfully!");
+// }
 
 document.addEventListener("DOMContentLoaded", () => {
   loadPatients();
@@ -254,9 +248,7 @@ async function loadPatientsTab() {
   loadPatients();
 
   // Add event listener for patient row clicks
-  document
-    .getElementById("patients-table")
-    .addEventListener("click", handlePatientClick);
+  document.getElementById("patients-table").addEventListener("click", handlePatientClick);
   const searchInput = document.getElementById("search-input");
   if (searchInput) {
     searchInput.addEventListener("input", searchPatients);
@@ -298,14 +290,13 @@ async function loadPatientDetails(patientId) {
     document.getElementById("email").value = patient.email;
     // Populate medical history checkboxes
     populateMedicalHistoryCheckboxes();
- // Check the appropriate medical history checkboxes
- Object.keys(patient).forEach(key => {
-  const checkbox = document.getElementById(key);
-  if (checkbox && checkbox.type === 'checkbox') {
-    checkbox.checked = patient[key];
-  }
-});
-
+    // Check the appropriate medical history checkboxes
+    Object.keys(patient).forEach((key) => {
+      const checkbox = document.getElementById(key);
+      if (checkbox && checkbox.type === "checkbox") {
+        checkbox.checked = patient[key];
+      }
+    });
 
     // Load procedures
     await loadProcedures(patientId);
@@ -318,16 +309,12 @@ async function loadPatientDetails(patientId) {
 
     const deletePatientBtn = document.getElementById("delete-patient");
     if (deletePatientBtn) {
-      deletePatientBtn.addEventListener("click", () =>
-        deletePatient(patientId)
-      );
+      deletePatientBtn.addEventListener("click", () => deletePatient(patientId));
     }
 
     const addProcedureBtn = document.getElementById("add-procedure");
     if (addProcedureBtn) {
-      addProcedureBtn.addEventListener("click", () =>
-        showAddProcedureForm(patientId)
-      );
+      addProcedureBtn.addEventListener("click", () => showAddProcedureForm(patientId));
     }
   } catch (error) {
     console.error("Error loading patient details:", error);
@@ -369,10 +356,7 @@ async function togglePatientDetails(row, patient) {
     detailsRow.remove();
   } else {
     const procedures = await window.api.getProcedures(patient.id);
-    const newRow = row.insertAdjacentElement(
-      "afterend",
-      document.createElement("tr")
-    );
+    const newRow = row.insertAdjacentElement("afterend", document.createElement("tr"));
     newRow.classList.add("patient-details");
     newRow.innerHTML = `
           <td colspan="3">
@@ -382,6 +366,7 @@ async function togglePatientDetails(row, patient) {
               <p><strong>Address:</strong> ${patient.address}</p>
               <p><strong>Phone:</strong> ${patient.phone}</p>
               <p><strong>Email:</strong> ${patient.email}</p>
+              <p><strong>Medical History:</strong> ${patient.medical_history}</p>
 
               <h4>Procedures</h4>
               <table class="procedures-table">
@@ -406,12 +391,8 @@ async function togglePatientDetails(row, patient) {
                       <td>$${proc.paid.toFixed(2)}</td>
                       <td>$${(proc.cost - proc.paid).toFixed(2)}</td>
                       <td>
-                        <button onclick="editProcedure(${
-                          proc.id
-                        })">Edit</button>
-                        <button onclick="deleteProcedure(${
-                          proc.id
-                        })">Delete</button>
+                        <button onclick="editProcedure(${proc.id})">Edit</button>
+                        <button onclick="deleteProcedure(${proc.id})">Delete</button>
                       </td>
                     </tr>
                   `
@@ -419,9 +400,7 @@ async function togglePatientDetails(row, patient) {
                     .join("")}
                 </tbody>
               </table>
-              <button onclick="showAddProcedureForm(${
-                patient.id
-              })">Add Procedure</button>
+              <button onclick="showAddProcedureForm(${patient.id})">Add Procedure</button>
             </div>
           </td>
         `;
@@ -455,9 +434,7 @@ function showEditPatientForm(patient) {
         <label for="edit-dob">Date of Birth:</label>
         <input type="date" id="edit-dob" value="${patient.dob}" required>
         <label for="edit-address">Address:</label>
-        <input type="text" id="edit-address" value="${
-          patient.address
-        }" required>
+        <input type="text" id="edit-address" value="${patient.address}" required>
         <label for="edit-phone">Phone Number:</label>
         <input type="tel" id="edit-phone" value="${patient.phone}" required>
 
@@ -542,9 +519,7 @@ async function loadPendingPayments() {
             <td>$${payment.balance.toFixed(2)}</td>
               <td>
             <button onclick="editPendingPayment(${payment.id})">Edit</button>
-            <button onclick="deletePendingPayment(${
-              payment.id
-            })">Delete</button>
+            <button onclick="deletePendingPayment(${payment.id})">Delete</button>
           </td>
           `;
     });
@@ -604,7 +579,10 @@ function showAddPatientForm() {
 }
 
 async function addPatient(event) {
-  event.preventDefault();
+  event.preventDefault(); // stop the form from submitting
+
+  const data = new FormData(event.target);
+  console.log([...data.keys()]);
 
   const patientData = {
     name: document.getElementById("name").value,
@@ -614,6 +592,11 @@ async function addPatient(event) {
     phone: document.getElementById("phone").value,
     email: document.getElementById("email").value,
   };
+  const conditions = [];
+  [...data.keys()].forEach((key) => {
+    conditions.push(key);
+  });
+  patientData.medical_history = conditions.join(", ");
 
   // Add medical history fields
   const medicalHistoryCheckboxes = document.querySelectorAll(
@@ -639,8 +622,9 @@ async function addPatient(event) {
     await window.api.addPatient(patientData);
     loadPatients();
     alert("Patient added successfully");
-    document.querySelector(".modal").remove();
+    this.reset();
     window.location.reload();
+    return;
   } catch (error) {
     console.error("Error adding patient:", error);
     alert("Error adding patient: " + error.message);
@@ -649,10 +633,7 @@ async function addPatient(event) {
 
 function searchPatients() {
   // Get the search input value
-  const searchTerm = document
-    .getElementById("search-input")
-    .value.toLowerCase()
-    .trim();
+  const searchTerm = document.getElementById("search-input").value.toLowerCase().trim();
 
   // Get all patient rows
   const rows = document.querySelectorAll("#patients-body tr");
@@ -664,25 +645,19 @@ function searchPatients() {
     const phone = row.cells[2]?.textContent.toLowerCase() || "";
 
     const matches =
-      id.includes(searchTerm) ||
-      name.includes(searchTerm) ||
-      phone.includes(searchTerm);
+      id.includes(searchTerm) || name.includes(searchTerm) || phone.includes(searchTerm);
 
     // Show or hide the row based on the match
     row.style.display = matches ? "" : "none";
   });
 
   // Log the number of visible rows after search
-  const visibleRows = document.querySelectorAll(
-    "#patients-body tr:not([style*='display: none'])"
-  );
+  const visibleRows = document.querySelectorAll("#patients-body tr:not([style*='display: none'])");
   console.log(`Visible rows after search: ${visibleRows.length}`);
 }
 
 // Add event listener to the search input
-document
-  .getElementById("search-input")
-  .addEventListener("input", searchPatients);
+document.getElementById("search-input").addEventListener("input", searchPatients);
 const searchTerm = document.getElementById("search-input").value.toLowerCase();
 const rows = document.querySelectorAll("#patients-body tr");
 
@@ -693,9 +668,7 @@ rows.forEach((row) => {
   console.log("Checking row:", name, "against search term:", searchTerm);
 
   const matches =
-    id.includes(searchTerm) ||
-    name.includes(searchTerm) ||
-    phone.includes(searchTerm);
+    id.includes(searchTerm) || name.includes(searchTerm) || phone.includes(searchTerm);
   row.style.display = matches ? "" : "none";
 });
 
@@ -1101,7 +1074,8 @@ function populateMedicalHistoryCheckboxes() {
   const container = document.getElementById("medical-history-checkboxes");
   container.innerHTML = ""; // Clear existing checkboxes
   medicalConditions.forEach((condition) => {
-    const id = condition.toLowerCase().replace(/[^a-z0-9]/g, "_");
+    const id = condition;
+
     const checkboxDiv = document.createElement("div");
     checkboxDiv.className = "checkbox-group";
     checkboxDiv.innerHTML = `

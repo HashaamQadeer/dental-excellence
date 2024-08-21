@@ -1,20 +1,16 @@
 const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
-
 let db;
 
 function initDatabase() {
-  db = new sqlite3.Database(
-    path.join(__dirname, "dental_excellence.db"),
-    (err) => {
-      if (err) {
-        console.error("Error opening database", err);
-      } else {
-        console.log("Connected to the SQLite database.");
-        createTables();
-      }
+  db = new sqlite3.Database(path.join(__dirname, "dental_excellence.db"), (err) => {
+    if (err) {
+      console.error("Error opening database", err);
+    } else {
+      console.log("Connected to the SQLite database.");
+      createTables();
     }
-  );
+  });
 }
 
 function createTables() {
@@ -28,47 +24,7 @@ function createTables() {
       phone TEXT NOT NULL UNIQUE,
       address TEXT NOT NULL,
       email TEXT NOT NULL UNIQUE,
-      heart_failure BOOLEAN,
-      hypertension BOOLEAN,
-      angina BOOLEAN,
-      heart_disease_attack BOOLEAN,
-      tuberculosis__tb_ BOOLEAN,
-      asthma BOOLEAN,
-      artificial_heart_valve BOOLEAN,
-      cardiac_pacemaker BOOLEAN,
-      congenital_heart_lesions BOOLEAN,
-      heart_surgery BOOLEAN,
-      anemia BOOLEAN,
-      angioplasty BOOLEAN,
-      chemotherapy BOOLEAN,
-      radiotherapy BOOLEAN,
-      cough BOOLEAN,
-      flu BOOLEAN,
-      stroke BOOLEAN,
-      kidney_trouble BOOLEAN,
-      ulcers BOOLEAN,
-      hyperacidity BOOLEAN,
-      sinus_trouble BOOLEAN,
-      allergies BOOLEAN,
-      diabetes BOOLEAN,
-      thyroid_disease BOOLEAN,
-      arthritis BOOLEAN,
-      steroids BOOLEAN,
-      pain_in_jaw_joints BOOLEAN,
-      hemophilia BOOLEAN,
-      blood_transfusion BOOLEAN,
-      epilepsy_seizures BOOLEAN,
-      fainting_spells BOOLEAN,
-      nervousness BOOLEAN,
-      psychiatric_treatment BOOLEAN,
-      smoker BOOLEAN,
-      anticoagulants BOOLEAN,
-      aids_hiv BOOLEAN,
-      hepatitis_a BOOLEAN,
-      hepatitis_b BOOLEAN,
-      hepatitis_c BOOLEAN,
-      alcohol_abuse BOOLEAN,
-      drug_abuse BOOLEAN
+      medical_history TEXT
     )`,
       function (err) {
         if (err) {
@@ -76,7 +32,6 @@ function createTables() {
         }
       }
     );
-
     db.run(
       `CREATE TABLE IF NOT EXISTS procedures (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -94,17 +49,11 @@ function createTables() {
       }
     );
 
-    db.run(
-      `CREATE INDEX IF NOT EXISTS idx_patient_id ON procedures (patient_id)`,
-      (err) => {
-        if (err) {
-          console.error(
-            "Error creating index on procedures table:",
-            err.message
-          );
-        }
+    db.run(`CREATE INDEX IF NOT EXISTS idx_patient_id ON procedures (patient_id)`, (err) => {
+      if (err) {
+        console.error("Error creating index on procedures table:", err.message);
       }
-    );
+    });
   });
 }
 
@@ -125,11 +74,19 @@ function addPatient(patientData) {
       reject(new Error("All fields are required"));
       return;
     }
-    const fields = ['name', 'gender', 'dob', 'address', 'phone', 'email', ...Object.keys(medicalHistory)];
-    const placeholders = fields.map(() => '?').join(', ');
+    const fields = [
+      "name",
+      "gender",
+      "dob",
+      "address",
+      "phone",
+      "email",
+      ...Object.keys(medicalHistory),
+    ];
+    const placeholders = fields.map(() => "?").join(", ");
     const values = [name, gender, dob, address, phone, email, ...Object.values(medicalHistory)];
 
-    const query = `INSERT INTO patients (${fields.join(', ')}) VALUES (${placeholders})`;
+    const query = `INSERT INTO patients (${fields.join(", ")}) VALUES (${placeholders})`;
 
     db.run(query, values, function (err) {
       if (err) reject(err);
@@ -150,9 +107,17 @@ function getPatientById(patientId) {
 function updatePatient(patientData) {
   return new Promise((resolve, reject) => {
     const { id, name, gender, dob, address, phone, email, ...medicalHistory } = patientData;
-    
-    const fields = ['name', 'gender', 'dob', 'address', 'phone', 'email', ...Object.keys(medicalHistory)];
-    const placeholders = fields.map(field => `${field} = ?`).join(', ');
+
+    const fields = [
+      "name",
+      "gender",
+      "dob",
+      "address",
+      "phone",
+      "email",
+      ...Object.keys(medicalHistory),
+    ];
+    const placeholders = fields.map((field) => `${field} = ?`).join(", ");
     const values = [name, gender, dob, address, phone, email, ...Object.values(medicalHistory), id];
 
     const query = `UPDATE patients SET ${placeholders} WHERE id = ?`;
@@ -225,17 +190,13 @@ function updateProcedure(procedureData) {
 
 function deleteProcedure(procedureId) {
   return new Promise((resolve, reject) => {
-    db.run(
-      "DELETE FROM procedures WHERE id = ?",
-      [procedureId],
-      function (err) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(this.changes);
-        }
+    db.run("DELETE FROM procedures WHERE id = ?", [procedureId], function (err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(this.changes);
       }
-    );
+    });
   });
 }
 
@@ -254,14 +215,10 @@ function getProcedures(patientId) {
 
 function getProcedureById(procedureId) {
   return new Promise((resolve, reject) => {
-    db.get(
-      "SELECT * FROM procedures WHERE id = ?",
-      [procedureId],
-      (err, row) => {
-        if (err) reject(err);
-        else resolve(row);
-      }
-    );
+    db.get("SELECT * FROM procedures WHERE id = ?", [procedureId], (err, row) => {
+      if (err) reject(err);
+      else resolve(row);
+    });
   });
 }
 
