@@ -27,7 +27,48 @@ function createTables() {
       dob DATE NOT NULL,
       phone TEXT NOT NULL UNIQUE,
       address TEXT NOT NULL,
-      email TEXT NOT NULL UNIQUE
+      email TEXT NOT NULL UNIQUE,
+      heart_failure BOOLEAN,
+      hypertension BOOLEAN,
+      angina BOOLEAN,
+      heart_disease_attack BOOLEAN,
+      tuberculosis__tb_ BOOLEAN,
+      asthma BOOLEAN,
+      artificial_heart_valve BOOLEAN,
+      cardiac_pacemaker BOOLEAN,
+      congenital_heart_lesions BOOLEAN,
+      heart_surgery BOOLEAN,
+      anemia BOOLEAN,
+      angioplasty BOOLEAN,
+      chemotherapy BOOLEAN,
+      radiotherapy BOOLEAN,
+      cough BOOLEAN,
+      flu BOOLEAN,
+      stroke BOOLEAN,
+      kidney_trouble BOOLEAN,
+      ulcers BOOLEAN,
+      hyperacidity BOOLEAN,
+      sinus_trouble BOOLEAN,
+      allergies BOOLEAN,
+      diabetes BOOLEAN,
+      thyroid_disease BOOLEAN,
+      arthritis BOOLEAN,
+      steroids BOOLEAN,
+      pain_in_jaw_joints BOOLEAN,
+      hemophilia BOOLEAN,
+      blood_transfusion BOOLEAN,
+      epilepsy_seizures BOOLEAN,
+      fainting_spells BOOLEAN,
+      nervousness BOOLEAN,
+      psychiatric_treatment BOOLEAN,
+      smoker BOOLEAN,
+      anticoagulants BOOLEAN,
+      aids_hiv BOOLEAN,
+      hepatitis_a BOOLEAN,
+      hepatitis_b BOOLEAN,
+      hepatitis_c BOOLEAN,
+      alcohol_abuse BOOLEAN,
+      drug_abuse BOOLEAN
     )`,
       function (err) {
         if (err) {
@@ -78,20 +119,22 @@ function getAllPatients() {
 
 function addPatient(patientData) {
   return new Promise((resolve, reject) => {
-    const { name, gender, dob, address, phone, email } = patientData;
+    const { name, gender, dob, address, phone, email, ...medicalHistory } = patientData;
 
     if (!name || !gender || !dob || !address || !phone || !email) {
       reject(new Error("All fields are required"));
       return;
     }
-    db.run(
-      "INSERT INTO patients (name, gender, dob, address, phone, email) VALUES (?, ?, ?, ?, ?, ?)",
-      [name, gender, dob, address, phone, email],
-      function (err) {
-        if (err) reject(err);
-        else resolve(this.lastID);
-      }
-    );
+    const fields = ['name', 'gender', 'dob', 'address', 'phone', 'email', ...Object.keys(medicalHistory)];
+    const placeholders = fields.map(() => '?').join(', ');
+    const values = [name, gender, dob, address, phone, email, ...Object.values(medicalHistory)];
+
+    const query = `INSERT INTO patients (${fields.join(', ')}) VALUES (${placeholders})`;
+
+    db.run(query, values, function (err) {
+      if (err) reject(err);
+      else resolve(this.lastID);
+    });
   });
 }
 
@@ -106,15 +149,18 @@ function getPatientById(patientId) {
 
 function updatePatient(patientData) {
   return new Promise((resolve, reject) => {
-    const { id, name, gender, dob, address, phone, email } = patientData;
-    db.run(
-      "UPDATE patients SET name = ?, gender = ?, dob = ?, address = ?, phone = ?, email = ? WHERE id = ?",
-      [name, gender, dob, address, phone, email, id],
-      (err) => {
-        if (err) reject(err);
-        else resolve();
-      }
-    );
+    const { id, name, gender, dob, address, phone, email, ...medicalHistory } = patientData;
+    
+    const fields = ['name', 'gender', 'dob', 'address', 'phone', 'email', ...Object.keys(medicalHistory)];
+    const placeholders = fields.map(field => `${field} = ?`).join(', ');
+    const values = [name, gender, dob, address, phone, email, ...Object.values(medicalHistory), id];
+
+    const query = `UPDATE patients SET ${placeholders} WHERE id = ?`;
+
+    db.run(query, values, (err) => {
+      if (err) reject(err);
+      else resolve();
+    });
   });
 }
 

@@ -15,7 +15,7 @@ const {
   getProcedureById,
   updateProcedure,
   deleteProcedure,
-} = require("./src/database");
+} = require("./src/database.js");
 
 let mainWindow;
 

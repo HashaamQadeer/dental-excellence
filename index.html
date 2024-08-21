@@ -12,15 +12,17 @@
     <header>
         <h1>Dental Excellence</h1>
     </header>
-
-    <nav>
-        <button class="tab-button active" data-tab="home">Home</button>
-        <button class="tab-button" data-tab="patients">Patients</button>
-        <button class="tab-button" data-tab="appointments">Appointments</button>
-        <button class="tab-button" data-tab="inventory">Inventory</button>
-        <button class="tab-button" data-tab="reports">Reports</button>
-        <button class="tab-button" data-tab="pending-payments">Pending Payments</button>
-    </nav>
+    <div class="container">
+      <nav class="sidebar">
+        <ul>
+          <li><a href="#home" class="tab-button" data-tab="home">Home</a></li>
+          <li><a href="#patients" class="tab-button" data-tab="patients">Patients Information</a></li>
+          <li><a href="#appointments" class="tab-button" data-tab="appointments">Appointments</a></li>
+          <li><a href="#inventory" class="tab-button" data-tab="inventory">Inventory</a></li>
+          <li><a href="#reports" class="tab-button" data-tab="reports">Reports</a></li>
+          <li><a href="#pending-payments" class="tab-button" data-tab="pending-payments">Pending Payments</a></li>
+        </ul>
+      </nav>
 
     <main>
         <section id="home" class="home-section tab-content active">
@@ -56,12 +58,35 @@
                     <input type="email" id="email">
                 </div>
 
-                <button type="submit">Add Patient</button>
+                <div class="form-group">
+                    <h3>Medical History</h3>
+                    <div id="medical-history-checkboxes">
+                      <!-- Medical history checkboxes will be dynamically inserted here -->
+                    </div>
+                    <button onclick="addPatient()">Add Patient</button>
             </form>
         </section>
 
         <section id="patients" class="tab-content">
-            <!-- Patient list will be dynamically loaded here -->
+          <h2>Patients</h2>
+          <div id="patient-actions">
+            <input type="text" id="search-input" placeholder="Search patients...">
+            <button id="add-patient">Add New Patient</button>
+          </div>
+          <table id="patients-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+              <tbody id="patients-body">
+                <!-- Patient rows will be dynamically inserted here -->
+              </tbody>
+            </table>
+            <div id="patient-details"></div>
+          </div>
         </section>
 
         <section id="appointments" class="tab-content">
